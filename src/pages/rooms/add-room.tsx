@@ -13,7 +13,7 @@ type AddRoomProps = SheetType & {
   isEdit?: boolean
 }
 
-const AddRoom: FC<AddRoomProps> = ({ open, setOpen, isEdit }) => {
+const AddRoom: FC<AddRoomProps> = ({ open, setOpen }) => {
   const form = useForm<CreateService>({
     resolver: zodResolver(createServiceSchema),
   })

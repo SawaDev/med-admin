@@ -2,7 +2,7 @@ import React from "react";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Control, FieldValues, Path } from 'react-hook-form';
-import { Option } from "@/types/other";
+import { Option } from "@/types/Other.type";
 import { Button } from "../ui/button";
 import { PlusCircle } from "lucide-react";
 

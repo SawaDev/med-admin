@@ -13,7 +13,7 @@ type AddDialogProps = SheetType & {
   isEdit?: boolean
 }
 
-const AddDialog: FC<AddDialogProps> = ({ open, setOpen, isEdit }) => {
+const AddDialog: FC<AddDialogProps> = ({ open, setOpen }) => {
   const form = useForm<CreateService>({
     resolver: zodResolver(createServiceSchema),
   })

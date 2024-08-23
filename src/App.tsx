@@ -1,13 +1,13 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
-import useAuthStore from './store/auth'
-import Login from './pages/login'
+// import useAuthStore from './store/auth'
+// import Login from './pages/login'
 import Patients from './pages/patients'
 import MainLayout from './layouts/Main.layout'
 import Services from './pages/services'
 import Rooms from './pages/rooms'
 
 function App() {
-  const { token } = useAuthStore()
+  // const { token } = useAuthStore()
 
   return (
     <HashRouter>

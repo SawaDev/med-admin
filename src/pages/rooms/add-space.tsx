@@ -15,7 +15,7 @@ type AddSpaceProps = SheetType & {
   handleAddRoom: () => void
 }
 
-const AddSpace: FC<AddSpaceProps> = ({ open, setOpen, isEdit, handleAddRoom }) => {
+const AddSpace: FC<AddSpaceProps> = ({ open, setOpen, handleAddRoom }) => {
   const form = useForm<CreateSpace>({
     resolver: zodResolver(createSpaceSchema),
   })

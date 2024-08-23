@@ -9,7 +9,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
-import { Option } from "@/types/other";
+import { Option } from "@/types/Other.type";
 
 interface MultiSelectProps {
   options: Option[]

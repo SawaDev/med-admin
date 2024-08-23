@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Service } from "@/types/Service.type";
 import { Space } from "@/types/Space.type";
 import { ColumnDef } from "@tanstack/react-table"
 import { PenIcon, Trash } from "lucide-react"

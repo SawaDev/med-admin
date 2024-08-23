@@ -3,7 +3,7 @@ import { Control, FieldValues, Path } from "react-hook-form";
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import MultiSelect from "../ui/multi-select";
-import { Option } from "@/types/other";
+import { Option } from "@/types/Other.type";
 
 interface FormMultiSelectProps<T extends FieldValues> extends React.InputHTMLAttributes<HTMLInputElement> {
   control: Control<T, any>;

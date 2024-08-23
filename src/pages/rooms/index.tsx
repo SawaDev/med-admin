@@ -74,6 +74,13 @@ const Rooms = () => {
           handleAddRoom={() => setAddRoom(true)}
         />
       }
+      {assign &&
+        <AddSpace
+          open={addSpace}
+          setOpen={setAddSpace}
+          handleAddRoom={() => setAddRoom(true)}
+        />
+      }
       {edit &&
         <AddDialog
           open={edit ? true : false}
