@@ -59,6 +59,21 @@
   }
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* Firefox */
+input[type="date"] {
+  -moz-appearance: textfield;
+}
+
+/* Internet Explorer */
+input[type="date"]::-ms-clear {
+  display: none;
+}
+
 @layer base {
   * {
     @apply border-border;

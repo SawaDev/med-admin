@@ -8,6 +8,7 @@ import { FC, useEffect } from 'react'
 import { SheetType } from '@/types/Other.type'
 import { CreateService } from '@/types/Service.type'
 import { createServiceSchema } from '@/schema/service'
+import { Button } from '@/components/ui/button'
 
 type AddDialogProps = SheetType & {
   isEdit?: boolean
@@ -34,11 +35,19 @@ const AddDialog: FC<AddDialogProps> = ({ open, setOpen }) => {
             <DialogTitle>Yangi xizmatni kiritish</DialogTitle>
             <DialogDescription>Yangi xizmatning ma'lumotlarini kiriting</DialogDescription>
           </DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>
             <DynamicForm
               control={form.control}
               fields={fields}
             />
+            <div className='flex gap-2 justify-end'>
+              <Button type='button' variant={"outline"} onClick={() => setOpen(false)}>
+                Bekor qilish
+              </Button>
+              <Button type='submit' variant={"default"}>
+                Saqlash
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>

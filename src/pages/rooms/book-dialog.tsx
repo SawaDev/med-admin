@@ -4,27 +4,24 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { FC, useEffect } from 'react'
 import { Option, SheetType } from '@/types/Other.type'
-import { CreateService } from '@/types/Service.type'
 import { FormInput } from '@/components/form/FormInput'
 import { FormSearchInput } from '@/components/form/FormSearchInput'
-import { createSpaceSchema } from '@/schema/space'
-import { CreateSpace } from '@/types/Space.type'
+import { CreateBook } from '@/types/Book.type'
+import { createBookSchema } from '@/schema/book'
 import { Button } from '@/components/ui/button'
 
-type AddSpaceProps = SheetType & {
+type BookDialogProps = SheetType & {
   isEdit?: boolean
   handleAddRoom: () => void
 }
 
-const AddSpace: FC<AddSpaceProps> = ({ open, setOpen, handleAddRoom }) => {
-  const form = useForm<CreateSpace>({
-    resolver: zodResolver(createSpaceSchema)
+const BookDialog: FC<BookDialogProps> = ({ open, setOpen, handleAddRoom }) => {
+  const form = useForm<CreateBook>({
+    resolver: zodResolver(createBookSchema),
   })
 
   useEffect(() => {
-    form.reset({
-      status: "empty"
-    })
+    form.reset({})
   }, [])
 
   const roomOptions: Option[] = [
@@ -38,7 +35,18 @@ const AddSpace: FC<AddSpaceProps> = ({ open, setOpen, handleAddRoom }) => {
     },
   ]
 
-  const onSubmit = (values: CreateService) => {
+  const spaceOptions: Option[] = [
+    {
+      value: "1",
+      label: "Space 1",
+    },
+    {
+      value: "2",
+      label: "Space 2",
+    },
+  ]
+
+  const onSubmit = (values: CreateBook) => {
     console.log(values)
   }
 
@@ -47,22 +55,24 @@ const AddSpace: FC<AddSpaceProps> = ({ open, setOpen, handleAddRoom }) => {
       <DialogContent>
         <Form {...form}>
           <DialogHeader className='h-8'>
-            <DialogTitle>Yangi joy kiritish</DialogTitle>
-            <DialogDescription>Yangi joyning ma'lumotlarini kiriting</DialogDescription>
+            <DialogTitle>Joy band qilish</DialogTitle>
+            <DialogDescription>Joy band qilish uchun quyidagi ma'lumotlarni to'ldiring</DialogDescription>
           </DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>
-            <FormInput
-              control={form.control}
-              name="name"
-              label="Nomi"
-              placeholder="Nomi"
-            />
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3 pt-3'>
             <FormSearchInput
               control={form.control}
               name="room_id"
               label="Xonani tanlang"
               placeholder="Xonani tanlang"
               options={roomOptions}
+              handleNew={handleAddRoom}
+            />
+            <FormSearchInput
+              control={form.control}
+              name="space_id"
+              label="Joyni tanlang"
+              placeholder="Joyni tanlang"
+              options={spaceOptions}
               handleNew={handleAddRoom}
             />
             <FormInput
@@ -72,6 +82,7 @@ const AddSpace: FC<AddSpaceProps> = ({ open, setOpen, handleAddRoom }) => {
               placeholder="Narxi"
               type='number'
             />
+
             <div className='flex gap-2 justify-end'>
               <Button type='button' variant={"outline"} onClick={() => setOpen(false)}>
                 Bekor qilish
@@ -87,4 +98,4 @@ const AddSpace: FC<AddSpaceProps> = ({ open, setOpen, handleAddRoom }) => {
   )
 }
 
-export default AddSpace
+export default BookDialog

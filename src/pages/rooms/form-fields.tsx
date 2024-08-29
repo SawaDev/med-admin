@@ -10,11 +10,20 @@ export const addRoomFields: FormField[] = [
     gridColumn: "1",
   },
   {
-    name: "price",
-    type: "input",
-    inputType: "number",
-    label: "Narxi",
-    placeholder: "Narxi",
+    name: "type",
+    type: "select",
+    label: "Xona turi",
+    placeholder: "Xona turi",
+    options: [
+      {
+        value: "standard",
+        label: "Standart"
+      },
+      {
+        value: "premium",
+        label: "Premium"
+      }
+    ],
     gridColumn: "1",
   }
 ]

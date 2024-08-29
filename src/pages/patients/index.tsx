@@ -7,9 +7,11 @@ import { PlusCircle } from "lucide-react"
 import { useState } from "react"
 import AddDialog from "./add-dialog"
 import DeletePatientDialog from "./delete-patient"
+import AttachServiceDialog from "./attach-service"
 
 const Patients = () => {
   const [add, setAdd] = useState<boolean>(false)
+  const [addService, setAddService] = useState<boolean>(false)
   const [edit, setEdit] = useState<number | undefined>()
   const [deleteModal, setDeleteModal] = useState<number | undefined>()
 
@@ -36,7 +38,11 @@ const Patients = () => {
             Bemorlar va ular haqidagi ma'lumotlar
           </CardDescription>
         </div>
-        <div>
+        <div className="space-x-2">
+          <Button onClick={() => setAddService(true)} variant={"outline"}>
+            <PlusCircle className="w-4 h-4 mr-1" />
+            Xizmat biriktirish
+          </Button>
           <Button onClick={() => setAdd(true)} variant={"outline"}>
             <PlusCircle className="w-4 h-4 mr-1" />
             Bemor qo'shish
@@ -54,6 +60,12 @@ const Patients = () => {
         <AddDialog
           open={add}
           setOpen={setAdd}
+        />
+      }
+       {addService &&
+        <AttachServiceDialog
+          open={addService}
+          setOpen={setAddService}
         />
       }
       {edit &&
