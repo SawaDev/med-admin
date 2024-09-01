@@ -1,13 +1,15 @@
 import CustomLink from '@/components/custom-link'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Bell, CircleUser, Home, Menu, Package, Package2, Search, ShoppingCart, Users, Workflow } from 'lucide-react'
-import { FC, ReactNode } from 'react'
+import Ambilator from '@/pages/ambilator'
+import { Bell, CircleUser, Home, Menu, Package2, School, Syringe, Users, Workflow } from 'lucide-react'
+import { FC, ReactNode, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
+  const [ambilator, setAmbilator] = useState<boolean>(false)
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -24,23 +26,26 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-              <CustomLink to="/">
+              <CustomLink to="dashboards">
                 <Home className="h-4 w-4" />
                 Dashboard
               </CustomLink>
-              <CustomLink to="/new">
-                <ShoppingCart className="h-4 w-4" />
-                Yangi Nimadur
-              </CustomLink>
-              <CustomLink to="/services">
+              <div
+                onClick={() => setAmbilator(true)}
+                className='flex flex-row items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary cursor-pointer'
+              >
+                <Syringe className="h-4 w-4" />
+                Ambilatorlik
+              </div>
+              <CustomLink to="services">
                 <Workflow className="h-4 w-4" />
                 Xizmatlar
               </CustomLink>
               <CustomLink to="rooms">
-                <Package className="h-4 w-4" />
+                <School className="h-4 w-4" />
                 Joylar{" "}
               </CustomLink>
-              <CustomLink to="/patients">
+              <CustomLink to="patients">
                 <Users className="h-4 w-4" />
                 Bemorlar
               </CustomLink>
@@ -76,31 +81,31 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
                   <span className="sr-only">Acme Inc</span>
                 </Link>
                 <CustomLink
-                  to="#"
+                  to="dashboards"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                 >
                   <Home className="h-5 w-5" />
                   Dashboard
                 </CustomLink>
+                <div
+                  onClick={() => setAmbilator(true)}
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
+                >
+                  <Syringe className="h-5 w-5" />
+                  Ambilatorlik
+                </div>
                 <CustomLink
                   to="#"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
                 >
-                  <ShoppingCart className="h-5 w-5" />
-                  Yangi Nimadur
-                </CustomLink>
-                <CustomLink
-                  to="#"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
+                  <Workflow className="h-5 w-5" />
                   Tibbiy Xizmatlar
                 </CustomLink>
                 <CustomLink
                   to="/rooms"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                 >
-                  <Package className="h-5 w-5" />
+                  <School className="h-5 w-5" />
                   Joylar
                 </CustomLink>
                 <CustomLink
@@ -119,7 +124,7 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
             </SheetContent>
           </Sheet>
           <div className="w-full flex-1">
-            <form>
+            {/* <form>
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -128,7 +133,7 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
                   className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
                 />
               </div>
-            </form>
+            </form> */}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -151,6 +156,12 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
           {children}
         </main>
       </div>
+      {ambilator && (
+        <Ambilator
+          open={ambilator}
+          setOpen={setAmbilator}
+        />
+      )}
     </div>
   )
 }

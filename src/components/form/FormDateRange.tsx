@@ -8,24 +8,21 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { cn } from "@/lib/utils";
-import { DayPicker, DateRange } from "react-day-picker";
+import { DayPicker, DateRange, Matcher } from "react-day-picker";
 import { Input } from "../ui/input";
 
 interface FormDateRangeProps<T extends FieldValues> {
   control: Control<T, any>;
   name: Path<T>;
   label?: string;
-  disabledDays?: {
-    from?: Date;
-    to?: Date;
-    specificDays?: Date[]; // New property to disable specific days
-  }
+  disabledDays?: Matcher | Matcher[]
+  numberOfMonths?: number
 }
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
 const FormDateRange = React.forwardRef<CalendarProps, FormDateRangeProps<any>>(
-  ({ control, name, label }) => {
+  ({ control, name, label, disabledDays, numberOfMonths }) => {
     const [range, setRange] = React.useState<DateRange | undefined>(undefined)
     const [stringDate, setStringDate] = React.useState<string>("")
 
@@ -44,9 +41,6 @@ const FormDateRange = React.forwardRef<CalendarProps, FormDateRangeProps<any>>(
                       type="text"
                       value={stringDate}
                       readOnly
-                      onClick={() => {
-                        // Open the popover when clicking the input
-                      }}
                     />
                     <PopoverTrigger asChild>
                       <Button
@@ -72,6 +66,8 @@ const FormDateRange = React.forwardRef<CalendarProps, FormDateRangeProps<any>>(
                         setStringDate(formattedRange);
                         onChange(selectedRange);
                       }}
+                      disabled={disabledDays}
+                      numberOfMonths={numberOfMonths}
                       {...props}
                     />
                   </PopoverContent>

@@ -20,3 +20,8 @@ export interface FormField {
   required_error?: string;
   placeholder?: string;
 }
+
+export type DateRangeType = {
+  from_date: string,
+  to_date: string
+}

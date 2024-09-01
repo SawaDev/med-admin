@@ -51,8 +51,8 @@ const AttachServiceDialog: FC<SheetType> = ({ open, setOpen }) => {
       <DialogContent>
         <Form {...form}>
           <DialogHeader className='h-8'>
-            <DialogTitle>Yangi bemorni kiritish</DialogTitle>
-            <DialogDescription>Yangi bemorning ma'lumotlarini kiriting</DialogDescription>
+            <DialogTitle>Bemorni xonaga biriktirish</DialogTitle>
+            <DialogDescription>Ma'lumotlarni to'ldirgan xolda, bemorni xonaga biriktirishingiz mumkin</DialogDescription>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3 mt-3'>
             <FormSearchInput
@@ -73,12 +73,17 @@ const AttachServiceDialog: FC<SheetType> = ({ open, setOpen }) => {
             />
             <FormDateRange
               control={form.control}
-              name="range"
-              label="Select a date range"
-              disabledDays={{
-                from: new Date(2023, 0, 1),
-                to: new Date(2023, 11, 31),
-              }}
+              name="dates"
+              label="Kunni kiriting"
+              disabledDays={[
+                new Date(2024, 7, 12),
+                new Date(2024, 7, 2),
+                {
+                  after: new Date(2024, 7, 20),
+                  before: new Date(2024, 7, 25),
+                },
+              ]}
+              numberOfMonths={2}
             />
 
             <div className='flex gap-2 justify-end'>

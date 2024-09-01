@@ -7,6 +7,13 @@ import { useMemo } from "react"
 type PatientColumnsType = (setEdit: (value: number) => void, setDelete: (value: number) => void) => ColumnDef<Patient, any>[];
 
 export const patientColumns: PatientColumnsType = (setEdit, setDelete) => {
+
+  const handleEdit = (e: React.MouseEvent<SVGSVGElement, MouseEvent>, id: number) => {
+    e.stopPropagation()
+    setEdit(id)
+    return console.log('first')
+  }
+
   return useMemo<ColumnDef<Patient, any>[]>(
     () => [
       {
@@ -36,17 +43,20 @@ export const patientColumns: PatientColumnsType = (setEdit, setDelete) => {
         cell: (info) => (
           <div className="flex gap-3 items-center">
             <PenIcon
-              onClick={() => setEdit(info.getValue())}
+              onClick={(e) => handleEdit(e, info.getValue())}
               className="w-6 h-6 cursor-pointer text-blue-300 border border-blue-400 p-1 rounded-sm"
             />
             <Trash
-              onClick={() => setDelete(info.getValue())}
+              onClick={(e) => {
+                e.stopPropagation()
+                setDelete(info.getValue())
+              }}
               className="w-6 h-6 cursor-pointer text-red-300 border border-red-400 p-1 rounded-sm"
             />
           </div>
         )
       }
     ],
-    []
+    [setEdit, setDelete]
   )
 }

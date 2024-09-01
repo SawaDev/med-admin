@@ -7,5 +7,11 @@ export const createServiceSchema = z.object({
 
 export const attachServiceSchema = z.object({
   room_id: z.string({ required_error: "Joyni tanlang" }),
-  patient_id: z.string({ required_error: "Bemorni tanlang" })
+  patient_id: z.string({ required_error: "Bemorni tanlang" }),
+  dates: z.object(
+    {
+      from: z.date().optional(),
+      to: z.date().optional()
+    },
+    { required_error: "Kunni tanlang!" }),
 })

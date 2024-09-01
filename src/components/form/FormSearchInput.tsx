@@ -16,10 +16,11 @@ interface FormSearchInputProps<T extends FieldValues> extends React.InputHTMLAtt
   options?: Option[];
   defaultValue?: string;
   handleNew?: () => void;
+  placeholder?: string;
 }
 
 const FormSearchInput = React.forwardRef<HTMLInputElement, FormSearchInputProps<any>>(
-  ({ className, control, name, label, options = [], handleNew }, ref) => {
+  ({ className, control, name, label, options = [], placeholder, handleNew }, ref) => {
     return (
       <FormField
         control={control}
@@ -37,7 +38,7 @@ const FormSearchInput = React.forwardRef<HTMLInputElement, FormSearchInputProps<
                       variant="outline"
                       role="combobox"
                       className={cn(
-                        "w-full justify-between",
+                        "w-full justify-between text-gray-500 font-normal",
                         !value && ""
                       )}
                     >
@@ -45,7 +46,7 @@ const FormSearchInput = React.forwardRef<HTMLInputElement, FormSearchInputProps<
                         ? options.find(
                           (o) => o.value === value
                         )?.label
-                        : "Tanlang..."}
+                        : placeholder ?? "Tanlang..."}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
