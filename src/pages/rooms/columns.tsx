@@ -1,14 +1,14 @@
 import { Badge } from "@/components/ui/badge";
-import { Space } from "@/types/Space.type";
+import { Bed } from "@/types/Bed.type";
 import { ColumnDef } from "@tanstack/react-table"
 import { PenIcon, Trash } from "lucide-react"
 import { useMemo } from "react"
 
 
-type SpaceColumnsType = (setEdit: (value: number) => void, setDelete: (value: number) => void) => ColumnDef<Space, any>[];
+type SpaceColumnsType = (setEdit: (value: number) => void, setDelete: (value: number) => void) => ColumnDef<Bed, any>[];
 
 export const spaceColumns: SpaceColumnsType = (setEdit, setDelete) => {
-  return useMemo<ColumnDef<Space, any>[]>(
+  return useMemo<ColumnDef<Bed, any>[]>(
     () => [
       {
         accessorKey: 'name',
