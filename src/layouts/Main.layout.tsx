@@ -1,21 +1,48 @@
-import CustomLink from '@/components/custom-link'
-import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import Ambilator from '@/pages/ambilator'
-import { Bell, CircleUser, Home, Menu, Package2, School, Syringe, Users, Workflow } from 'lucide-react'
-import { FC, ReactNode, useState } from 'react'
-import { Link } from 'react-router-dom'
+import CustomLink from "@/components/custom-link";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import Ambilator from "@/pages/ambilator";
+import useAuthStore from "@/store/auth";
+import {
+  Bell,
+  CircleUser,
+  Home,
+  Menu,
+  Package2,
+  School,
+  Syringe,
+  Users,
+  Workflow,
+} from "lucide-react";
+import { FC, ReactNode, useState } from "react";
+import { Link } from "react-router-dom";
 
 const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const [ambilator, setAmbilator] = useState<boolean>(false)
+  const [ambilator, setAmbilator] = useState<boolean>(false);
+
+  const { clearAuth } = useAuthStore();
+
+  const handleLogOut = () => {
+    clearAuth()
+  };
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
         <div className="sticky top-0 bottom-0 flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            <CustomLink to="/" className="flex items-center gap-2 font-semibold">
+            <CustomLink
+              to="/"
+              className="flex items-center gap-2 font-semibold"
+            >
               <Package2 className="h-6 w-6" />
               <span className="">Company Name</span>
             </CustomLink>
@@ -32,7 +59,7 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
               </CustomLink>
               <div
                 onClick={() => setAmbilator(true)}
-                className='flex flex-row items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary cursor-pointer'
+                className="flex flex-row items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary cursor-pointer"
               >
                 <Syringe className="h-4 w-4" />
                 Ambilatorlik
@@ -52,7 +79,7 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
             </nav>
           </div>
           <div className="mt-auto p-4">
-            <Button size="sm" className="w-full">
+            <Button onClick={handleLogOut} size="sm" className="w-full">
               Log out
             </Button>
           </div>
@@ -117,7 +144,7 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
                 </CustomLink>
               </nav>
               <div className="mt-auto">
-                <Button size="sm" className="w-full">
+                <Button onClick={handleLogOut} size="sm" className="w-full">
                   Log out
                 </Button>
               </div>
@@ -152,18 +179,11 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="flex-1 h-full w-full">
-          {children}
-        </main>
+        <main className="flex-1 h-full w-full">{children}</main>
       </div>
-      {ambilator && (
-        <Ambilator
-          open={ambilator}
-          setOpen={setAmbilator}
-        />
-      )}
+      {ambilator && <Ambilator open={ambilator} setOpen={setAmbilator} />}
     </div>
-  )
-}
+  );
+};
 
-export default MainLayout
+export default MainLayout;

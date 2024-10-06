@@ -1,17 +1,16 @@
-import React from 'react'
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-import { DateRange } from "react-day-picker"
+import React from "react";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { DateRange } from "react-day-picker";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-
+} from "@/components/ui/popover";
 
 interface DateRangeType {
   defaultValue?: {
@@ -21,16 +20,18 @@ interface DateRangeType {
   onChange?: (range: DateRange | undefined) => void;
 }
 
-const DatePickerWithRange: React.FC<DateRangeType> = ({ onChange, defaultValue }) => {
-
+const DatePickerWithRange: React.FC<DateRangeType> = ({
+  onChange,
+  defaultValue,
+}) => {
   const [date, setDate] = React.useState<DateRange | undefined>(
     defaultValue
       ? {
-        from: new Date(defaultValue.from_date),
-        to: new Date(defaultValue.to_date)
-      }
+          from: new Date(defaultValue.from_date),
+          to: new Date(defaultValue.to_date),
+        }
       : undefined
-  )
+  );
 
   return (
     <div className={"grid gap-2"}>
@@ -48,8 +49,18 @@ const DatePickerWithRange: React.FC<DateRangeType> = ({ onChange, defaultValue }
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "dd-MM-yyyy")} -{" "}
-                  {format(date.to, "dd-MM-yyyy")}
+                  {format(
+                    date.from && date.from.toString().length > 0
+                      ? date.from
+                      : new Date(),
+                    "dd-MM-yyyy"
+                  )}{" "}
+                  -{" "}
+                  {date.to ? (
+                    format(date.to, "dd-MM-yyyy")
+                  ) : (
+                    <span>---</span>
+                  )}
                 </>
               ) : (
                 format(date.from, "dd-MM-yyyy")
@@ -66,9 +77,24 @@ const DatePickerWithRange: React.FC<DateRangeType> = ({ onChange, defaultValue }
             defaultMonth={date?.from}
             selected={date}
             onSelect={(range) => {
-              setDate(range)
-              if (onChange) {
-                onChange(range)
+              console.log("rangeee", range?.from, range?.to);
+              if (range?.from && range.to) {
+                setDate(range);
+                if (onChange) {
+                  onChange(range);
+                }
+              } else {
+                setDate(
+                  defaultValue
+                    ? {
+                        from: new Date(defaultValue.from_date),
+                        to: new Date(defaultValue.to_date),
+                      }
+                    : undefined
+                );
+                if (onChange) {
+                  onChange(range);
+                }
               }
             }}
             numberOfMonths={2}
@@ -76,7 +102,7 @@ const DatePickerWithRange: React.FC<DateRangeType> = ({ onChange, defaultValue }
         </PopoverContent>
       </Popover>
     </div>
-  )
-}
+  );
+};
 
-export default DatePickerWithRange
+export default DatePickerWithRange;

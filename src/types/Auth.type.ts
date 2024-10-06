@@ -1,23 +1,34 @@
 import { authSchema } from "@/schema/auth"
 import { z } from "zod"
+import { Response } from "./Other.type"
 
 export interface AuthStore {
-  user_name: string | null
-  permissions: string[]
   token: string | null
+  account: Account | null
 
-  login: (user_name: string, permissions: string[], token: string) => void
-  logout: () => void
+  setToken: (token: string) => void
+  setAccount: (account: Account) => void
+  clearAuth: () => void
 }
 
 export type AuthType = z.infer<typeof authSchema>
 
 export interface AuthResponse {
   success: boolean
+  data: string
+}
+
+export type Account = {
+  id: number;
+  name: string;
+  picture_url?: string | null;
+}
+
+export type GetUserDetailsResponse = Response & {
   data: {
-    user_name: string
-    permissions: string[]
-    created_at: string
-    token: string
+    id: number;
+    name: string;
+    username: string;
+    account: Account;
   }
 }

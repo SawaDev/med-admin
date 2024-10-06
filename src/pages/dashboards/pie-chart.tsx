@@ -1,102 +1,73 @@
-import * as React from "react"
-import { Label, Pie, PieChart } from "recharts"
+import * as React from "react";
+import { LabelList, Pie, PieChart } from "recharts";
 
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
+import { DateRangeType } from "@/types/Other.type";
+import useTherapies from "@/hooks/useTherapies";
+import { endOfDay, startOfDay } from "date-fns";
+import { generateChartConfig, toUTCString } from "@/lib/utils";
+import { chartColors } from "@/constants";
 
-export const description = "A donut chart with text"
+export type PieChartTypes = {
+  dates: DateRangeType;
+};
 
-const chartData = [
-  { services: "EKG", percentage: 14, fill: "var(--color-EKG)" },
-  { services: "Service-1", percentage: 32, fill: "var(--color-Service-1)" },
-  { services: "Service-2", percentage: 27, fill: "var(--color-Service-2)" },
-  { services: "Service-3", percentage: 7, fill: "var(--color-Service-3)" },
-  { services: "Boshqa", percentage: 20, fill: "var(--color-Boshqa)" },
-]
+const PieChartComponent: React.FC<PieChartTypes> = ({ dates }) => {
+  const { getTherapyStatisticsQuery } = useTherapies();
 
-const chartConfig = {
-  percentage: {
-    label: "Foiz",
-  },
-  EKG: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  "Service-1": {
-    label: "Service-1",
-    color: "hsl(var(--chart-2))",
-  },
-  "Service-2": {
-    label: "Service-2",
-    color: "hsl(var(--chart-3))",
-  },
-  "Service-3": {
-    label: "Service-3",
-    color: "hsl(var(--chart-4))",
-  },
-  "Boshqa": {
-    label: "Boshqa",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig
+  const startOfFromDateUTC = toUTCString(startOfDay(new Date(dates.from_date)));
 
-export function Component() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.percentage, 0)
-  }, [])
+  const endOfToDateUTC = toUTCString(endOfDay(new Date(dates.to_date)));
+
+  const { data, isLoading } = getTherapyStatisticsQuery({
+    from_date_time: startOfFromDateUTC,
+    to_date_time: endOfToDateUTC,
+  });
+
+  const chartConfig = generateChartConfig(data ? data.data : [])
+
+  if (isLoading) {
+    return "Loading...";
+  }
 
   return (
-    <ChartContainer
-      config={chartConfig}
-      className="mx-auto aspect-square max-h-[400px]"
-    >
+    <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[500px]">
       <PieChart>
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
         />
         <Pie
-          data={chartData}
+          data={
+            data?.data
+              ? data.data.map((d, index) => ({
+                  ...d,
+                  fill: chartColors[index % chartColors.length],
+                }))
+              : []
+          }
           dataKey="percentage"
-          nameKey="services"
+          nameKey="name"
           innerRadius={60}
-          strokeWidth={5}
+          strokeWidth={0}
         >
-          <Label
-            content={({ viewBox }) => {
-              if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                return (
-                  <text
-                    x={viewBox.cx}
-                    y={viewBox.cy}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                  >
-                    <tspan
-                      x={viewBox.cx}
-                      y={viewBox.cy}
-                      className="fill-foreground text-3xl font-bold"
-                    >
-                      {totalVisitors.toLocaleString()}
-                    </tspan>
-                    <tspan
-                      x={viewBox.cx}
-                      y={(viewBox.cy || 0) + 24}
-                      className="fill-muted-foreground"
-                    >
-                      Foiz
-                    </tspan>
-                  </text>
-                )
-              }
-            }}
+          <LabelList
+            dataKey="browser"
+            className="fill-background"
+            stroke="none"
+            fontSize={12}
+            formatter={(value: keyof typeof chartConfig) =>
+              chartConfig[value]?.label
+            }
           />
         </Pie>
       </PieChart>
     </ChartContainer>
-  )
-}
+  );
+};
+
+export default PieChartComponent;

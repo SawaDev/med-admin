@@ -19,7 +19,7 @@ import { FormInput } from "@/components/form/FormInput"
 
 const Login = () => {
   const { authMutation } = useAuth()
-  const { login } = useAuthStore()
+  const { setToken } = useAuthStore()
 
   const navigate = useNavigate()
   const auth = authMutation()
@@ -27,20 +27,19 @@ const Login = () => {
   const form = useForm<AuthType>({
     resolver: zodResolver(authSchema),
     defaultValues: {
-      user_name: '',
+      username: '',
       password: '',
     }
   })
 
   const onSubmit = (values: AuthType) => {
     auth.mutateAsync(values)
-      .then((res) => login(res.data.user_name, res.data.permissions, res.data.token))
+      .then((res) => setToken(res.data))
       .catch((err) => console.log(err))
       .finally(() => {
         window.location.reload()
         navigate("/")
       })
-
   }
 
   return (
@@ -57,7 +56,7 @@ const Login = () => {
             <CardContent className="grid gap-4">
               <FormInput
                 control={form.control}
-                name="user_name"
+                name="username"
                 label="Username"
                 placeholder="Username"
               />

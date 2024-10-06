@@ -1,54 +1,34 @@
-import { AuthStore } from '@/types/Auth.type';
-import { create } from 'zustand';
+import { Account, AuthStore } from '@/types/Auth.type';
+import {create} from 'zustand';
 
-const loadState = () => {
-  const storedState = localStorage.getItem('authState');
-  return (storedState !== undefined && storedState !== null) ? JSON.parse(storedState) : {
-    user_name: null,
-    permissions: [],
-    token: null,
-  };
+const persistToLocalStorage = (key: string, value: any) => {
+  localStorage.setItem(key, JSON.stringify(value));
 };
 
-const saveState = (state: {
-  user_name: string | null;
-  permissions: string[];
-  token: string | null;
-}) => {
-  localStorage.setItem('authState', JSON.stringify(state));
+const loadFromLocalStorage = (key: string, defaultValue: any) => {
+  const storedValue = localStorage.getItem(key);
+  return storedValue ? JSON.parse(storedValue) : defaultValue;
 };
 
 const useAuthStore = create<AuthStore>((set) => ({
-  ...loadState(),
+  token: loadFromLocalStorage('token', ''), 
+  account: loadFromLocalStorage('account', {}),
 
-  login: (user_name: string, permissions: string[], token: string) => {
-    const newState = {
-      user_name,
-      permissions,
-      token,
-    };
-    set(newState);
-    saveState(newState);
+  setToken: (token: string) => {
+    set({ token });
+    persistToLocalStorage('token', token); 
   },
 
-  logout: () => {
-    const newState = {
-      user_name: null,
-      permissions: [],
-      token: null,
-    };
-    set(newState);
-    saveState(newState);
+  setAccount: (account: Account) => {
+    set({ account });
+    persistToLocalStorage('account', account);
   },
 
-  updatePermissions: (permissions: string[]) => set((state) => {
-    const newState = {
-      ...state,
-      permissions,
-    };
-    saveState(newState);
-    return newState;
-  }),
+  clearAuth: () => {
+    set({ token: '', account: null });
+    localStorage.removeItem('token');
+    localStorage.removeItem('account');
+  },
 }));
 
 export default useAuthStore;

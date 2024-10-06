@@ -25,7 +25,6 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
 const FormDatePicker = React.forwardRef<CalendarProps, FormDatePickerProps<any>>(
   ({ control, name, label, disabledDays }) => {
-    const [stringDate, setStringDate] = React.useState<string>("")
 
     return (
       <FormField
@@ -40,14 +39,13 @@ const FormDatePicker = React.forwardRef<CalendarProps, FormDatePickerProps<any>>
                   <div className="relative w-full">
                     <Input
                       type="date"
-                      value={stringDate}
+                      value={value}
                       onChange={(e) => {
-                        setStringDate(e.target.value)
                         const parsedDate = new Date(e.target.value)
                         if (isNaN(parsedDate.getTime())) {
                           onChange(undefined)
                         } else {
-                          onChange(parsedDate)
+                          onChange(e.target.value)
                         }
                       }}
                     />
@@ -66,11 +64,10 @@ const FormDatePicker = React.forwardRef<CalendarProps, FormDatePickerProps<any>>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
-                      selected={value}
+                      selected={new Date(value)}
                       onSelect={(selectedDate) => {
                         if (!selectedDate) return
                         onChange(format(selectedDate, "yyyy-MM-dd"))
-                        setStringDate(format(selectedDate, "yyyy-MM-dd"))
                       }}
                       defaultMonth={value}
                       initialFocus

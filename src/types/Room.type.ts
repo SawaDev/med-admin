@@ -1,25 +1,19 @@
 import { createRoomSchema } from "@/schema/room";
 import { z } from "zod";
+import { Response } from "./Other.type";
 
 export interface Room {
   id: number;
   name: string;
-  empty_spaces: number;
-  type: "premium" | "standard"
+  type: {
+    id: "vip" | "standard";
+    name: string;
+  };
+  places_count: number;
 }
 
-export type GetAllRoomsType = {
-  id: number;
-  name: string;
-  empty_spaces: number;
-  type: "premium" | "standard",
-  spaces: {
-    id: number
-    name: string
-    price: number
-    status: "booked" | "empty"
-    available_in?: string
-  }[]
+export type GetAllRoomsResponse = Response & {
+  data: Room[]
 }
 
 export type CreateRoom = z.infer<typeof createRoomSchema>

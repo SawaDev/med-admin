@@ -10,7 +10,7 @@ export const fields: FormField[] = [
     gridColumn: "1",
   },
   {
-    name: "price",
+    name: "price_in_sum",
     type: "input",
     inputType: "number",
     label: "Narxi",

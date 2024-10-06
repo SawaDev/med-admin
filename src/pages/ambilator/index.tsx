@@ -1,93 +1,120 @@
-import { FormInput } from '@/components/form/FormInput'
-import { FormSearchInput } from '@/components/form/FormSearchInput'
-import { FormTextarea } from '@/components/form/FormTextarea'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Form } from '@/components/ui/form'
-import { createAmbilatorSchema } from '@/schema/ambilator'
-import { CreateAmbilator } from '@/types/Ambilator.type'
-import { Option, SheetType } from '@/types/Other.type'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { FC } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormInput } from "@/components/form/FormInput";
+import { FormSearchInput } from "@/components/form/FormSearchInput";
+import { FormTextarea } from "@/components/form/FormTextarea";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
+import usePatients from "@/hooks/usePatients";
+import useTherapies from "@/hooks/useTherapies";
+import useTherapyTypes from "@/hooks/useTherapyTypes";
+import { createTherapySchema } from "@/schema/therapy";
+import { SheetType } from "@/types/Other.type";
+import { CreateTherapy } from "@/types/Therapy.type";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FC } from "react";
+import { useForm } from "react-hook-form";
 
 const Ambilator: FC<SheetType> = ({ open, setOpen }) => {
+  const { getAllPatientsQuery } = usePatients();
+  const { getAllTherapyTypesQuery } = useTherapyTypes();
+  const { createTherapyMutation } = useTherapies();
 
-  const form = useForm<CreateAmbilator>({
-    resolver: zodResolver(createAmbilatorSchema),
-  })
+  const createTherapy = createTherapyMutation();
 
-  const onSubmit = (values: CreateAmbilator) => {
-    console.log(values)
-  }
+  const {
+    data: patients,
+    isLoading: loadingPatients,
+    isError: errorPatients,
+  } = getAllPatientsQuery({ size: 100, page: 1 });
 
-  const serviceOptions: Option[] = [
-    {
-      value: '1',
-      label: 'Service 1'
-    },
-    {
-      value: '2',
-      label: 'Service 2'
-    }
-  ]
+  const {
+    data: therapyTypes,
+    isLoading: loadingTherapyTypes,
+    isError: errorTherapyTypes,
+  } = getAllTherapyTypesQuery();
 
-  const patientOptions: Option[] = [
-    {
-      value: '1',
-      label: 'Patient 1'
-    },
-    {
-      value: '2',
-      label: 'Patient 2'
-    }
-  ]
+  const form = useForm<CreateTherapy>({
+    resolver: zodResolver(createTherapySchema),
+  });
+
+  const onSubmit = (values: CreateTherapy) => {
+    const filteredValue = {
+      ...values,
+      patient_id: Number(values.patient_id),
+      type_id: Number(values.type_id),
+    };
+
+    createTherapy.mutateAsync(filteredValue).then(() => setOpen(false));
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            Ambilator bemor
-          </DialogTitle>
+          <DialogTitle>Ambilator bemor</DialogTitle>
           <DialogDescription>
             Yangi ambilator bemorni kiriting
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-3'>
-            <FormSearchInput
-              name='service_id'
-              control={form.control}
-              label="Servis"
-              placeholder="Servisni tanlang..."
-              options={serviceOptions}
-            />
-            <FormSearchInput
-              name='patient_id'
-              control={form.control}
-              label="Bemor"
-              placeholder="Bemorni tanlang..."
-              options={patientOptions}
-            />
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-3"
+          >
+            {!loadingTherapyTypes &&
+              !errorTherapyTypes &&
+              therapyTypes?.data && (
+                <FormSearchInput
+                  name="type_id"
+                  control={form.control}
+                  label="Servis"
+                  placeholder="Servisni tanlang..."
+                  options={therapyTypes.data.map((therapyType) => ({
+                    label: therapyType.name,
+                    value: therapyType.id.toString(),
+                  }))}
+                />
+              )}
+            {!loadingPatients && !errorPatients && patients?.data && (
+              <FormSearchInput
+                name="patient_id"
+                control={form.control}
+                label="Bemor"
+                placeholder="Bemorni tanlang..."
+                options={patients.data.content.map((patient) => ({
+                  label: patient.name,
+                  value: patient.id.toString(),
+                }))}
+              />
+            )}
             <FormInput
-              name='price'
+              name="price_in_sum"
               control={form.control}
               label="Narx"
               placeholder="Narxni kiriting"
-              type='number'
+              type="number"
             />
             <FormTextarea
-              name='comment'
+              name="comment"
               control={form.control}
               label="Komment"
               placeholder="Komment qoldiring"
             />
-            <div className='flex gap-2 justify-end col-span-2'>
-              <Button onClick={() => setOpen(false)} type='button' variant={"outline"}>
+            <div className="flex gap-2 justify-end col-span-2">
+              <Button
+                onClick={() => setOpen(false)}
+                type="button"
+                variant={"outline"}
+              >
                 Bekor qilish
               </Button>
-              <Button type='submit' variant={"default"}>
+              <Button type="submit" variant={"default"}>
                 Saqlash
               </Button>
             </div>
@@ -95,7 +122,7 @@ const Ambilator: FC<SheetType> = ({ open, setOpen }) => {
         </Form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default Ambilator
+export default Ambilator;

@@ -6,30 +6,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import useRooms from "@/hooks/useRooms";
+import useBeds from "@/hooks/useBeds";
 import { SheetType } from "@/types/Other.type";
 import { FC } from "react";
 
-const DeleteRoomDialog: FC<SheetType & { id: number }> = ({
+const DeleteBedDialog: FC<SheetType & { id: number }> = ({
   open,
   setOpen,
   id,
 }) => {
-  const { deleteRoomMutation } = useRooms();
+  const { deleteBedMutation } = useBeds();
 
-  const deleteRoom = deleteRoomMutation(id);
+  const deleteBed = deleteBedMutation(id);
 
   const handleDelete = () => {
-    deleteRoom.mutateAsync().then(() => setOpen(false));
+    deleteBed.mutateAsync().then(() => setOpen(false));
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Xonani o'chirish</DialogTitle>
+          <DialogTitle>Yotoqni o'chirish</DialogTitle>
           <DialogDescription>
-            Ushbu xonaning ma'lumotlari o'chirilgandan so'ng uni qayta tiklab
+            Ushbu yotoqning ma'lumotlari o'chirilgandan so'ng uni qayta tiklab
             bo'lmaydi!
           </DialogDescription>
           <div className="flex items-center justify-end gap-3 mt-3">
@@ -46,4 +46,4 @@ const DeleteRoomDialog: FC<SheetType & { id: number }> = ({
   );
 };
 
-export default DeleteRoomDialog;
+export default DeleteBedDialog;

@@ -5,7 +5,7 @@ import { FC } from 'react'
 
 const DeleteServiceDialog: FC<SheetType> = ({ open, setOpen }) => {
 
-
+console.log('render', open)
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
