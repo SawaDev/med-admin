@@ -17,7 +17,10 @@ export type CreateTherapyDataType = {
   price_in_sum: number;
 };
 
-export type GetTherapiesData = Partial<DateRangeType> & ListType;
+export type GetTherapiesData = Partial<DateRangeType> & ListType & {
+  bedside_treatment?: boolean;
+  type_id?: number;
+};
 
 export type GetTherapiesResponse = Response & {
   data: {

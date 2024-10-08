@@ -22,11 +22,24 @@ import usePatients from "@/hooks/usePatients";
 import useBeds from "@/hooks/useBeds";
 import AddBed from "../rooms/add-bed";
 import { differenceInDays, format } from "date-fns";
+import { useDebounce } from "@/hooks/useDebounce";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 const AttachServiceDialog: FC<SheetType> = ({ open, setOpen }) => {
   const [addRoom, setAddRoom] = useState<boolean>(false);
   const [addBed, setAddBed] = useState<number | undefined>(undefined);
   const [addPatient, setAddPatient] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string | undefined>();
+  const [roomType, setRoomType] = useState<string | undefined>();
+
+  const debouncedQuery = useDebounce(searchQuery, 1000);
 
   const form = useForm<z.infer<typeof createBookingSchema>>({
     resolver: zodResolver(createBookingSchema),
@@ -53,6 +66,7 @@ const AttachServiceDialog: FC<SheetType> = ({ open, setOpen }) => {
   } = getAllPatientsQuery({
     size: 100,
     page: 1,
+    search: debouncedQuery,
   });
 
   const {
@@ -62,7 +76,6 @@ const AttachServiceDialog: FC<SheetType> = ({ open, setOpen }) => {
   } = getRoomBedsQuery(Number(roomId));
 
   const onSubmit = (values: z.infer<typeof createBookingSchema>) => {
-    console.log('values', values)
     const duration_in_days =
       values.dates.from && !values.dates.to
         ? 1
@@ -76,6 +89,21 @@ const AttachServiceDialog: FC<SheetType> = ({ open, setOpen }) => {
 
     createBedBooking.mutateAsync(formattedValues).then(() => setOpen(false));
   };
+
+  const handleInputChange = (value: string | undefined) => {
+    setSearchQuery(value);
+  };
+
+  const roomOptions = [
+    {
+      value: "standard",
+      label: "Standard",
+    },
+    {
+      value: "vip",
+      label: "VIP",
+    },
+  ];
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -92,17 +120,36 @@ const AttachServiceDialog: FC<SheetType> = ({ open, setOpen }) => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-3 mt-3"
           >
-            {!loadingPatients && !errorPatients && patients?.data && (
+            <Label>Xona turini tanlang</Label>
+            <Select onValueChange={(value) => setRoomType(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Tanlang..." />
+              </SelectTrigger>
+              <SelectContent>
+                {roomOptions.map((o) => (
+                  <SelectItem key={o.value} value={o.value}>
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {!errorPatients && (
               <FormSearchInput
                 control={form.control}
                 name="patient_id"
                 label="Bemorni tanlang"
                 placeholder="Bemorni tanlang"
-                options={patients.data.content.map((patient) => ({
-                  label: patient.name,
-                  value: patient.id.toString(),
-                }))}
+                options={
+                  patients?.data
+                    ? patients.data.content.map((patient) => ({
+                        label: patient.name,
+                        value: patient.id.toString(),
+                      }))
+                    : []
+                }
                 handleNew={() => setAddPatient(true)}
+                handleSearch={handleInputChange}
+                loading={loadingPatients}
               />
             )}
             {!loadingRooms && !errorRooms && rooms?.data && (
@@ -111,10 +158,12 @@ const AttachServiceDialog: FC<SheetType> = ({ open, setOpen }) => {
                 name="room_id"
                 label="Xonani tanlang"
                 placeholder="Xonani tanlang"
-                options={rooms.data.map((room) => ({
-                  label: room.name,
-                  value: room.id.toString(),
-                }))}
+                options={rooms.data
+                  .filter((room) => room.type.id === roomType)
+                  .map((room) => ({
+                    label: room.name,
+                    value: room.id.toString(),
+                  }))}
                 handleNew={() => setAddRoom(true)}
               />
             )}

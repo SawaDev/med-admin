@@ -64,7 +64,7 @@ const usePatients = () => {
 
   const getAllPatientsQuery = (data: ListType) =>
     useQuery<GetAllPatientsResponse, Error>({
-      queryKey: ["patients", data.size, data.page],
+      queryKey: ["patients", data.size, data.page, data.search],
       queryFn: async () => {
         try {
           const response = await api.post(`/patients/list`, data);

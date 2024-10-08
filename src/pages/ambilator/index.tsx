@@ -48,6 +48,7 @@ const Ambilator: FC<SheetType> = ({ open, setOpen }) => {
       ...values,
       patient_id: Number(values.patient_id),
       type_id: Number(values.type_id),
+      price_in_sum: values.price_in_sum ?? 0
     };
 
     createTherapy.mutateAsync(filteredValue).then(() => setOpen(false));

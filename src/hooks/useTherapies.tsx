@@ -34,7 +34,7 @@ const useTherapies = () => {
 
   const getTherapiesQuery = (data: GetTherapiesData) =>
     useQuery<GetTherapiesResponse, Error>({
-      queryKey: ["therapies", data.size, data.page, data.from_date, data.to_date, data.search],
+      queryKey: ["therapies", data.bedside_treatment, data.size, data.page, data.from_date, data.to_date, data.search],
       queryFn: async () => {
         try {
           const response = await api.post(`/therapies/list`, data);

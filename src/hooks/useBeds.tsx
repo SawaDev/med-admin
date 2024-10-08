@@ -51,6 +51,11 @@ const useBeds = () => {
           return null;
         }
       },
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["therapies", true],
+        });
+      },
     });
 
   const getRoomBedsQuery = (id?: number) =>
@@ -136,6 +141,9 @@ const useBeds = () => {
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["beds", id] });
+        queryClient.invalidateQueries({
+          queryKey: ["therapies", true],
+        });
       },
     });
 

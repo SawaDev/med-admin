@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Ambilator from "@/pages/ambilator";
+import AttachServiceDialog from "@/pages/patients/attach-service";
 import useAuthStore from "@/store/auth";
 import {
+  Bed,
   Bell,
   CircleUser,
   Home,
@@ -27,11 +29,12 @@ import { Link } from "react-router-dom";
 
 const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const [ambilator, setAmbilator] = useState<boolean>(false);
+  const [attachService, setAttachService] = useState<boolean>(false);
 
   const { clearAuth } = useAuthStore();
 
   const handleLogOut = () => {
-    clearAuth()
+    clearAuth();
   };
 
   return (
@@ -56,6 +59,10 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
               <CustomLink to="dashboards">
                 <Home className="h-4 w-4" />
                 Dashboard
+              </CustomLink>
+              <CustomLink to="bedside-treatment">
+                <Bed className="h-4 w-4" />
+                Yotib davolanish
               </CustomLink>
               <div
                 onClick={() => setAmbilator(true)}
@@ -181,6 +188,9 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
         </header>
         <main className="flex-1 h-full w-full">{children}</main>
       </div>
+      {attachService && (
+        <AttachServiceDialog open={attachService} setOpen={setAttachService} />
+      )}
       {ambilator && <Ambilator open={ambilator} setOpen={setAmbilator} />}
     </div>
   );

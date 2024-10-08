@@ -10,6 +10,7 @@ import Dashboards from "./pages/dashboards";
 import useAuth from "./hooks/useAuth";
 import { useEffect } from "react";
 import { Toaster } from "./components/ui/toaster";
+import BedsideTreatment from "./pages/bedside-treatment";
 
 function App() {
   const { token, setAccount } = useAuthStore();
@@ -36,6 +37,7 @@ function App() {
             <Route path="/">
               <Route index element={<Dashboards />} />
               <Route path="dashboards" element={<Dashboards />} />
+              <Route path="bedside-treatment" element={<BedsideTreatment />} />
               <Route path="patients" element={<Patients />} />
               <Route path="patients/:id" element={<SinglePatient />} />
               <Route path="services" element={<Services />} />

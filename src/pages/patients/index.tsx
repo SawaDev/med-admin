@@ -24,10 +24,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import usePatients from "@/hooks/usePatients";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataTablePagination } from "@/components/ui/pagination";
+import AttachTherapy from "./attach-therapy";
 
 const Patients = () => {
   const [add, setAdd] = useState<boolean>(false);
   const [addService, setAddService] = useState<boolean>(false);
+  const [attachTherapy, setAttachTherapy] = useState<boolean>(false);
   const [edit, setEdit] = useState<Patient | undefined>();
   const [deleteModal, setDeleteModal] = useState<number | undefined>();
 
@@ -91,6 +93,10 @@ const Patients = () => {
         </div>
         <div className="space-x-2">
           <Button onClick={() => setAddService(true)} variant={"outline"}>
+            <PlusCircle className="w-4 h-4 mr-1" />
+            Xonaga biriktirish
+          </Button>
+          <Button onClick={() => setAttachTherapy(true)} variant={"outline"}>
             <PlusCircle className="w-4 h-4 mr-1" />
             Xizmat biriktirish
           </Button>
@@ -179,6 +185,9 @@ const Patients = () => {
       {add && <AddDialog open={add} setOpen={() => setAdd(false)} />}
       {addService && (
         <AttachServiceDialog open={addService} setOpen={setAddService} />
+      )}
+      {attachTherapy && (
+        <AttachTherapy open={attachTherapy} setOpen={setAttachTherapy} />
       )}
       {edit && (
         <AddDialog
